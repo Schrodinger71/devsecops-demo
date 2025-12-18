@@ -1,1 +1,29 @@
-# тут что то будет
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: devsecops_api
+    environment:
+      - APP_NAME=DevSecOps Demo
+      - API_KEY=super-secret-key
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: devsecops_redis
+    ports:
+      - "6379:6379"
+
+  reverse-proxy:
+    image: nginx:alpine
+    container_name: devsecops_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api

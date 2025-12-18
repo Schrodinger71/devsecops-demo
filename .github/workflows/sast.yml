@@ -1,0 +1,12 @@
+name: SAST
+
+on:
+  pull_request:
+
+jobs:
+  bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install bandit
+      - run: bandit -r app

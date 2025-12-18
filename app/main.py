@@ -1,11 +1,11 @@
 from fastapi import FastAPI
+from app.config import settings
+from app.routes import router
 
-app = FastAPI(title="DevSecOps Demo App")
+app = FastAPI(title=settings.APP_NAME)
+
+app.include_router(router)
 
 @app.get("/")
-def read_root():
-    return {"message": "Hello DevSecOps"}
-
-@app.get("/user/{username}")
-def read_user(username: str):
-    return {"user": username}
+def root():
+    return {"message": "DevSecOps application is running"}
