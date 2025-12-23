@@ -1,11 +1,15 @@
 # 🔐 DevSecOps Demo — Python Security Automation
 
+<div align="center">
+
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Framework-teal?logo=fastapi)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-blue?logo=docker)
 ![CI](https://img.shields.io/github/actions/workflow/status/Schrodinger71/devsecops-demo/ci.yml?label=CI&logo=github)
 ![SAST](https://img.shields.io/github/actions/workflow/status/Schrodinger71/devsecops-demo/sast.yml?label=SAST&logo=github)
 ![Security](https://img.shields.io/badge/Security-DevSecOps-critical)
+
+</div>
 
 Учебный DevSecOps-проект, демонстрирующий автоматизацию обеспечения
 безопасности Python-веб-приложения с использованием CI/CD, статического
