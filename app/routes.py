@@ -16,7 +16,5 @@ def get_user(username: str):
 # НЕБЕЗОПАСНЫЙ КОД ДЛЯ ДЕМОНСТРАЦИИ
 @router.get("/vulnerable/users")
 def get_user_unsafe(username: str):
-    # Прямая подстановка пользовательского ввода в запрос - УЯЗВИМОСТЬ!
     query = f"SELECT * FROM users WHERE name = '{username}'"
-    # ... выполнение запроса ...
     return {"message": "This endpoint is vulnerable to SQL injection"}
