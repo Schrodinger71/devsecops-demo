@@ -12,3 +12,9 @@ def health():
 def get_user(username: str):
     logger.info(f"User requested: {username}")
     return {"user": username}
+
+# НЕБЕЗОПАСНЫЙ КОД ДЛЯ ДЕМОНСТРАЦИИ
+@router.get("/vulnerable/users")
+def get_user_unsafe(username: str):
+    query = f"SELECT * FROM users WHERE name = '{username}'"
+    return {"message": "This endpoint is vulnerable to SQL injection"}
