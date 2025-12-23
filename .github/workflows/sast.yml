@@ -1,7 +1,7 @@
 name: SAST
 
 on:
-  pull_request:
+  push:
 
 jobs:
   bandit:
