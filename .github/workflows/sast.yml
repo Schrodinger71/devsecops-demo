@@ -34,7 +34,11 @@ jobs:
       # 4. Detect secrets (поиск захардкоженных секретов)
       - name: Detect secrets with Gitleaks
         uses: gitleaks/gitleaks-action@v2
-      
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # УБЕРИТЕ СЛЕДУЮЩУЮ СТРОКУ, если это личный репозиторий (Schrodinger71 - индивидуальный пользователь)
+          # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} 
+
       # 5. Объединение отчетов и проверка
       - name: Process security reports
         run: |
