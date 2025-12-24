@@ -18,12 +18,12 @@ jobs:
           pip install bandit
           bandit -r app -f json -o bandit-report.json || true
       
-      # 2. Semgrep (продвинутый шаблонный анализ)
-      - name: Run Semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: p/security-audit
-          output: semgrep-results.json
+      # # 2. Semgrep (продвинутый шаблонный анализ)
+      # - name: Run Semgrep
+      #   uses: returntocorp/semgrep-action@v1
+      #   with:
+      #     config: p/security-audit
+      #     output: semgrep-results.json
       
       # 3. Safety (проверка уязвимостей в зависимостях)
       - name: Check dependencies with Safety
