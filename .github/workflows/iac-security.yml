@@ -1,0 +1,63 @@
+name: Infrastructure as Code Security
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.json'
+      - '**/*.tf'
+      - '**/*.tfvars'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/*.json'
+
+jobs:
+  iac-security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check YAML syntax
+        run: |
+          find . -name "*.yml" -o -name "*.yaml" | xargs -I {} python -c "import yaml; yaml.safe_load(open('{}'))" || true
+
+      - name: Scan with Checkov (IaC security)
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          output_format: sarif
+          output_file_path: checkov-results.sarif
+          quiet: false
+          framework: all
+        continue-on-error: true
+
+      - name: Scan with Terrascan (if Terraform files exist)
+        run: |
+          if find . -name "*.tf" | grep -q .; then
+            docker run --rm -v "$(pwd):/iac" -w /iac tenable/terrascan scan -i terraform -o sarif > terrascan-results.sarif
+          else
+            echo "No Terraform files found"
+          fi
+        continue-on-error: true
+
+      - name: Scan with KICS (Kubernetes, Docker, etc)
+        uses: checkmarx/kics-github-action@v1.6.12
+        with:
+          path: .
+          output_path: results/
+          fail_on: high
+        continue-on-error: true
+
+      - name: Upload IaC reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: iac-security-reports
+          path: |
+            checkov-results.sarif
+            terrascan-results.sarif
+            results/results.sarif
