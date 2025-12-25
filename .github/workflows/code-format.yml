@@ -1,0 +1,51 @@
+name: Code Formatting
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  black-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Black
+        run: pip install black
+      
+      - name: Check formatting with Black
+        run: black --check --diff app/
+        
+      - name: Auto-fix formatting (optional)
+        if: failure() && github.event_name == 'pull_request'
+        run: |
+          black app/
+          git diff --exit-code || echo "Code needs reformatting"
+          
+  isort-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install isort
+        run: pip install isort
+      
+      - name: Check import sorting
+        run: isort --check-only --diff app/
+        
+      - name: Fix imports (optional)
+        if: failure() && github.event_name == 'pull_request'
+        run: |
+          isort app/
+          git diff --exit-code || echo "Imports need sorting"

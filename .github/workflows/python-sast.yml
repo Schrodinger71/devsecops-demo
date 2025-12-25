@@ -1,0 +1,82 @@
+name: Python SAST Security
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: '0 0 * * 1' # Weekly scan
+
+jobs:
+  bandit-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Bandit
+        run: pip install bandit
+        
+      - name: Run Bandit security scan
+        run: |
+          bandit -r app/ \
+            -f json \
+            -o bandit-report.json \
+            -ll \
+            --confidence-level high \
+            --severity-level high
+        continue-on-error: true
+        
+      - name: Convert Bandit report to SARIF
+        if: always()
+        run: |
+          pip install bandit-sarif-formatter
+          bandit-sarif-formatter -i bandit-report.json -o bandit-results.sarif || true
+          
+      - name: Upload to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: bandit-results.sarif
+          
+      - name: Generate security summary
+        if: always()
+        run: |
+          echo "## 🔒 Python Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          if [ -f bandit-report.json ]; then
+            ISSUES=$(jq '.results | length' bandit-report.json 2>/dev/null || echo "0")
+            echo "### Bandit Analysis" >> $GITHUB_STEP_SUMMARY
+            echo "- **Total issues found:** $ISSUES" >> $GITHUB_STEP_SUMMARY
+            
+            # Count by severity
+            HIGH=$(jq '[.results[] | select(.issue_severity == "HIGH")] | length' bandit-report.json 2>/dev/null || echo "0")
+            MEDIUM=$(jq '[.results[] | select(.issue_severity == "MEDIUM")] | length' bandit-report.json 2>/dev/null || echo "0")
+            LOW=$(jq '[.results[] | select(.issue_severity == "LOW")] | length' bandit-report.json 2>/dev/null || echo "0")
+            
+            echo "- **High severity:** $HIGH" >> $GITHUB_STEP_SUMMARY
+            echo "- **Medium severity:** $MEDIUM" >> $GITHUB_STEP_SUMMARY
+            echo "- **Low severity:** $LOW" >> $GITHUB_STEP_SUMMARY
+            
+            if [ $HIGH -gt 0 ]; then
+              echo "### ⚠️ Critical Issues Found" >> $GITHUB_STEP_SUMMARY
+              jq -r '.results[] | select(.issue_severity == "HIGH") | "• **" + .test_name + "** in " + .filename + ":" + (.line_number|tostring)' bandit-report.json | head -5 >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+          
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-security-report
+          path: |
+            bandit-report.json
+            bandit-results.sarif
+      
