@@ -1,0 +1,49 @@
+name: Bandit Security Scan
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  bandit:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Bandit
+        run: pip install bandit
+        
+      - name: Run Bandit scan
+        id: scan
+        run: |
+          # Run bandit with text output
+          bandit -r app/ -f txt -o bandit-output.txt || true
+          
+      - name: Display results
+        if: always()
+        run: |
+          echo "## 🔍 Bandit Security Scan Results" > $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f bandit-output.txt ]; then
+            echo "### Scan Results:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat bandit-output.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No security issues found!" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit-output.txt
