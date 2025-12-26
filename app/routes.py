@@ -3,13 +3,7 @@
 ВНИМАНИЕ: Этот код содержит преднамеренные уязвимости для обучения!
 """
 
-import pickle
 import sqlite3
-import subprocess
-import os
-import yaml
-import xml.etree.ElementTree as ET
-from passlib.context import CryptContext
 from fastapi import APIRouter, Depends, Query
 from app.auth import verify_api_key
 from app.logger import logger
