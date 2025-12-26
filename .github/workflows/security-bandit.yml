@@ -24,7 +24,7 @@ jobs:
         id: scan
         run: |
           # Run bandit with text output
-          bandit -r app/ -f txt -o bandit-output.txt || true
+          bandit -r app/ -f txt -o bandit-output.txt
           
       - name: Display results
         if: always()
