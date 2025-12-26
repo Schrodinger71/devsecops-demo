@@ -1,0 +1,52 @@
+name: Code Metrics & Quality
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  code-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install analysis tools
+        run: |
+          pip install radon mccabe xenon pycodestyle pydocstyle
+          
+      - name: Calculate cyclomatic complexity
+        run: |
+          echo "### Cyclomatic Complexity" > metrics.md
+          radon cc app/ -s -a >> metrics.md
+          echo "" >> metrics.md
+          
+      - name: Calculate maintainability index
+        run: |
+          echo "### Maintainability Index" >> metrics.md
+          radon mi app/ -s >> metrics.md
+          echo "" >> metrics.md
+          
+      - name: Calculate raw metrics
+        run: |
+          echo "### Raw Metrics" >> metrics.md
+          radon raw app/ -s >> metrics.md
+          
+      - name: Check with xenon
+        run: |
+          xenon app/ --max-absolute B --max-modules A --max-average A || true
+          
+      - name: Run docstring checks
+        run: |
+          pydocstyle app/ --convention=google || true
+          
+      - name: Upload metrics report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-metrics
+          path: metrics.md
