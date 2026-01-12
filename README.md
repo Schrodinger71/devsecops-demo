@@ -22,7 +22,6 @@
 | Secrets | ![Detect-secrets](https://img.shields.io/badge/detect--secrets-v1.4-secrets) | Утечки секретов и ключей | [![Secrets detection](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/secrets-scan.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/secrets-scan.yml) |
 | Зависимости | ![Safety](https://img.shields.io/badge/safety-v2.3-deps) | CVE в зависимостях | [![Dependency vulnerability scan](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-metrics.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-metrics.yml) |
 | Docker | ![Trivy](https://img.shields.io/badge/trivy-v0.45-container) | Уязвимости в Docker образах | [![Container security](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/container-security.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/container-security.yml) |
-| IaC | ![Checkov](https://img.shields.io/badge/checkov-v3.2-iac) | Небезопасная конфигурация Docker/K8s | [![IaC security scan](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/iac-security.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/iac-security.yml) |
 
 
 
