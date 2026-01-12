@@ -56,10 +56,14 @@ devsecops-demo/
 ├── requirements.txt
 └── .github/
   └── workflows/
-    ├── ci.yml
-    ├── sast.yml
-    ├── docker-security.yml
-    └── release.yml
+    ├── code-format.yml
+    ├── code-lint.yml
+    ├── code-metrics.yml
+    ├── container-security.yml
+    ├── iac-security.yml
+    ├── secrets-scan.yml
+    ├── security-bandit.yml
+    └── type-check.yml
 
 ````
 
