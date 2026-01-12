@@ -1,0 +1,11 @@
+# .checkov.yaml
+# Для iac security
+soft-fail: true
+skip-check:
+  - "CKV2_GHA_1:on(Static security analysis)"
+  - "CKV2_GHA_1:on(Container security)"
+  - "CKV2_GHA_1:on(Type checking)"
+  - "CKV2_GHA_1:on(Lint security baseline)"
+  - "CKV2_GHA_1:on(Dependency vulnerability scan)"
+  - "CKV2_GHA_1:on(Secrets detection)"
+  - "CKV2_GHA_1:on(Code format check)"

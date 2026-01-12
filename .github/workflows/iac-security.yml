@@ -9,10 +9,10 @@ permissions:
 jobs:
   checkov:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v3
       - uses: bridgecrewio/checkov-action@master
         with:
           directory: .
+          output_format: sarif
+          log_level: WARNING
