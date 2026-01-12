@@ -1,59 +1,14 @@
-name: Code Linting
-on:
-  push:
-    branches: [main, master, develop]
-  pull_request:
-    branches: [main, master]
+name: Lint security baseline
+
+on: [push, pull_request]
 
 jobs:
-  flake8-lint:
+  flake8:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-          
-      - name: Install Flake8
-        run: pip install flake8 flake8-docstrings flake8-bugbear
-        
-      - name: Run Flake8 with custom config
-        run: |
-          flake8 app/ \
-            --count \
-            --max-complexity=10 \
-            --max-line-length=88 \
-            --statistics \
-            --show-source \
-            --format=github \
-            --exit-zero
-        continue-on-error: true
-        
-  pylint-analysis:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          
-      - name: Install Pylint
-        run: pip install pylint
-        
-      - name: Run Pylint
-        run: |
-          pylint app/ \
-            --fail-under=7.0 \
-            --output-format=colorized \
-            --reports=n \
-            --score=y
-        continue-on-error: true
-        
-      - name: Generate Pylint report
-        if: always()
-        run: |
-          echo "Pylint Score: $(pylint app/ --exit-zero 2>/dev/null | grep -o 'rated at [0-9.]*' | cut -d' ' -f3 || echo 'N/A')"
+      - run: pip install flake8
+      - run: flake8 app

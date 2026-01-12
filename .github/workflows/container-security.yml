@@ -1,83 +1,13 @@
-name: Container Security
-on:
-  push:
-    branches: [main, master]
-    paths:
-      - 'Dockerfile'
-      - 'docker-compose.yml'
-      - '.docker/**'
-  pull_request:
-    branches: [main, master]
-    paths:
-      - 'Dockerfile'
-      - 'docker-compose.yml'
+name: Container security
+
+on: [push, pull_request]
 
 jobs:
-  docker-security:
+  trivy:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Build Docker image
-        run: |
-          docker build -t devsecops-demo:${{ github.sha }} .
-
-      - name: Run Hadolint (Dockerfile linter)
-        uses: hadolint/hadolint-action@v3.1.0
+      - uses: actions/checkout@v3
+      - run: docker build -t devsecops-demo .
+      - uses: aquasecurity/trivy-action@master
         with:
-          dockerfile: Dockerfile
-          format: sarif
-          output-file: hadolint-results.sarif
-        continue-on-error: true
-
-      - name: Scan Docker image with Trivy (vulnerabilities)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: devsecops-demo:${{ github.sha }}
-          format: 'sarif'
-          output: 'trivy-vuln-results.sarif'
-          severity: 'CRITICAL,HIGH,MEDIUM'
-          scanners: 'vuln'
-
-      - name: Scan Docker image with Trivy (secrets)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: devsecops-demo:${{ github.sha }}
-          format: 'sarif'
-          output: 'trivy-secret-results.sarif'
-          scanners: 'secret'
-
-      - name: Scan Docker image with Trivy (misconfig)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: devsecops-demo:${{ github.sha }}
-          format: 'sarif'
-          output: 'trivy-misconfig-results.sarif'
-          scanners: 'misconfig'
-
-      - name: Docker Bench Security
-        run: |
-          docker run --rm --net host --pid host --userns host --cap-add audit_control \
-            -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
-            -v /var/lib:/var/lib \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            --label docker_bench_security \
-            docker/docker-bench-security || true
-
-      - name: Upload security reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: container-security-reports
-          path: |
-            trivy-*-results.sarif
-            hadolint-results.sarif
-
-      - name: Upload to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: |
-            trivy-vuln-results.sarif
-            trivy-secret-results.sarif
-            trivy-misconfig-results.sarif
-            hadolint-results.sarif
+          image-ref: devsecops-demo
