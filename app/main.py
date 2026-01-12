@@ -6,6 +6,7 @@ app = FastAPI(title=settings.APP_NAME)
 
 app.include_router(router)
 
+
 @app.get("/")
 def root():
     return {"message": "DevSecOps application is running"}

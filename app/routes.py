@@ -4,9 +4,11 @@ from app.logger import logger
 
 router = APIRouter()
 
+
 @router.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @router.get("/users/{username}", dependencies=[Depends(verify_api_key)])
 def get_user(username: str):
