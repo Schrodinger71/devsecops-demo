@@ -2,18 +2,23 @@ name: IaC security scan
 
 on: [push, pull_request]
 
-permissions:
-  contents: read
-  security-events: write
-
 jobs:
   checkov:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: bridgecrewio/checkov-action@master
-        with:
-          directory: .
-          framework: docker_compose
-          output_format: sarif
-          log_level: WARNING
+      
+      - name: Run Checkov
+        run: |
+          pip install checkov
+
+          echo "=== FULL CHECKOV SCAN ==="
+          checkov -d . --output cli
+
+          echo "=== DOCKER COMPOSE SPECIFIC SCAN ==="
+          checkov -f docker-compose.yml --output cli
+
+          echo "=== SECRETS SCAN ==="
+          checkov -f docker-compose.yml --framework secrets --output cli
+
+          echo "Scan completed"
