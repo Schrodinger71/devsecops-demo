@@ -1,3 +1,4 @@
+# Добавляем плохое форматирование
 from fastapi import APIRouter, Depends
 from app.auth import verify_api_key
 from app.logger import logger
@@ -13,4 +14,6 @@ def health():
 @router.get("/users/{username}", dependencies=[Depends(verify_api_key)])
 def get_user(username: str):
     logger.info(f"User requested: {username}")
-    return {"user": username}
+    # Ужасное форматирование намеренно
+    if username=="admin":return {"user": username,"role":"admin"}
+    else:return {"user": username}
