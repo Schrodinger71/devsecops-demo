@@ -1,19 +1,32 @@
-# 🔐 DevSecOps Demo — Python Security Automation
+
 
 <div align="center">
+  
+# 🔐 DevSecOps Demo — Python Security Automation
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Framework-teal?logo=fastapi)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-blue?logo=docker)
-![CI](https://img.shields.io/github/actions/workflow/status/Schrodinger71/devsecops-demo/ci.yml?label=CI&logo=github)
-![SAST](https://img.shields.io/github/actions/workflow/status/Schrodinger71/devsecops-demo/sast.yml?label=SAST&logo=github)
 ![Security](https://img.shields.io/badge/Security-DevSecOps-critical)
+
+### Учебный DevSecOps-проект, демонстрирующий автоматизацию обеспечения безопасности Python-веб-приложения с использованием CI/CD, статического анализа кода (SAST) и сканирования контейнеров.
 
 </div>
 
-Учебный DevSecOps-проект, демонстрирующий автоматизацию обеспечения
-безопасности Python-веб-приложения с использованием CI/CD, статического
-анализа кода (SAST) и сканирования контейнеров.
+## 🛡️ Security Tooling Stack
+
+| Категория | 🔧 Инструмент | 🎯 Что обнаруживает | Статус |
+|-----------|------------|-----------|--------|
+| Формат кода | ![Black](https://img.shields.io/badge/black-v23.12-formatter) | Нечитаемый код, непоследовательный стиль | [![Code format check](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-format.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-format.yml) |
+| Линтинг | ![Flake8](https://img.shields.io/badge/flake8-v6.1-linter) | Плохие практики, ошибки стиля | [![Lint security baseline](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-lint.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-lint.yml) |
+| Типы | ![Mypy](https://img.shields.io/badge/mypy-v1.7-type_checker) | Логические ошибки типов | [![Type checking](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/type-check.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/type-check.yml) |
+| SAST | ![Bandit](https://img.shields.io/badge/bandit-v1.7-sast) | Уязвимости Python | [![Static security analysis](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/security-bandit.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/security-bandit.yml) |
+| Secrets | ![Detect-secrets](https://img.shields.io/badge/detect--secrets-v1.4-secrets) | Утечки секретов и ключей | [![Secrets detection](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/secrets-scan.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/secrets-scan.yml) |
+| Зависимости | ![Safety](https://img.shields.io/badge/safety-v2.3-deps) | CVE в зависимостях | [![Dependency vulnerability scan](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-metrics.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/code-metrics.yml) |
+| Docker | ![Trivy](https://img.shields.io/badge/trivy-v0.45-container) | Уязвимости в Docker образах | [![Container security](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/container-security.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/container-security.yml) |
+| IaC | ![Checkov](https://img.shields.io/badge/checkov-v3.2-iac) | Небезопасная конфигурация Docker/K8s | [![IaC security scan](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/iac-security.yml/badge.svg)](https://github.com/Schrodinger71/devsecops-demo/actions/workflows/iac-security.yml) |
+
+
 
 ## 📌 Описание проекта
 
@@ -107,17 +120,3 @@ docker-compose up --build
 * **CI Automation** — автоматическая проверка сборки
 * **Release Pipeline** — отдельный workflow для релизов
 
-
-## 🛡️ Security Tooling Stack
-
-| Категория | 🔧 Инструмент | 🎯 Что обнаруживает | Статус |
-|-----------|------------|-----------|--------|
-| Формат кода | ![Black](https://img.shields.io/badge/black-v23.12-formatter) | Нечитаемый код, непоследовательный стиль | ✅ Включено |
-| Линтинг | ![Flake8](https://img.shields.io/badge/flake8-v6.1-linter) | Плохие практики, ошибки стиля | ✅ Включено |
-| Типы | ![Mypy](https://img.shields.io/badge/mypy-v1.7-type_checker) | Логические ошибки типов | ✅ Включено |
-| SAST | ![Bandit](https://img.shields.io/badge/bandit-v1.7-sast) | Уязвимости Python | ✅ Включено |
-| Secrets | ![Detect-secrets](https://img.shields.io/badge/detect--secrets-v1.4-secrets) | Утечки секретов и ключей | ✅ Включено |
-| Зависимости | ![Safety](https://img.shields.io/badge/safety-v2.3-deps) | CVE в зависимостях | ✅ Включено |
-| Docker | ![Trivy](https://img.shields.io/badge/trivy-v0.45-container) | Уязвимости в Docker образах | ✅ Включено |
-| IaC | ![Checkov](https://img.shields.io/badge/checkov-v3.2-iac) | Небезопасная конфигурация Docker/K8s | ✅ Включено |
-| Метрики | ![Radon](https://img.shields.io/badge/radon-v5.1-metrics) | Высокая цикломатическая сложность | ✅ Включено |
